@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +22,11 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/create/user', [DashboardController::class, 'create'])->name('user.create');
-    Route::post('/create/user', [DashboardController::class, 'store'])->name('user.store');
+    Route::get('/user/{id}', [DashboardController::class, 'show'])->name('user.show');
+
+    Route::middleware(['can:create user'])->get('/create/user', [DashboardController::class, 'create'])->name('user.create');
+    Route::middleware(['can:create user'])->post('/create/user', [DashboardController::class, 'store'])->name('user.store');
+    
     Route::get('/edit/user/{id}', [DashboardController::class, 'edit'])->name('user.edit');
     Route::post('/update/user/{id}', [DashboardController::class, 'update'])->name('user.update');
     Route::post('/delete/user/{id}', [DashboardController::class, 'destroy'])->name('user.destroy');
@@ -33,6 +37,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/role/{id}', [RoleController::class, 'edit'])->name('role.edit');
     Route::post('/update/role/{id}', [RoleController::class, 'update'])->name('role.update');
     Route::post('/delete/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+    
+    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
+    Route::get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
+    Route::post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');
+    Route::get('/edit/permission/{id}', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
+    Route::post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+    Route::post('/assign/permission/{id}',[PermissionController::class,'give_permission'])->name('permission.assign');
 });
 
 
