@@ -18,14 +18,16 @@ Route::prefix('superadmin')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
-    Route::get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
-    Route::post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');
-    Route::get('/edit/permission/{id}', [PermissionController::class, 'edit'])->name('permission.edit');
-    Route::post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
-    Route::post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+    Route::middleware(['can:see permission list'])->get('/permission', [PermissionController::class, 'index'])->name('permission.index');
+    Route::middleware(['can:create permission'])->get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
+    Route::middleware(['can:create permission'])->post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');
+    Route::middleware(['can:edit permission'])->get('/edit/permission/{id}', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::middleware(['can:edit permission'])->post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
+    Route::middleware(['can:delete permission'])->post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+    // Route::middleware(['can:assign permission'])->post('/assign/permission/{id}', [PermissionController::class, 'give_permission'])->name('permission.assign');
     Route::post('/assign/permission/{id}', [PermissionController::class, 'give_permission'])->name('permission.assign');
     Route::post('/revoke/permission/{id}', [PermissionController::class, 'revoke_permission'])->name('permission.revoke');
+    // Route::middleware(['can:revoke permission'])->post('/revoke/permission/{id}', [PermissionController::class, 'revoke_permission'])->name('permission.revoke');
 });
 
 

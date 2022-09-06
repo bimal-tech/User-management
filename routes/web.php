@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/role/{id}', [RoleController::class, 'edit'])->name('role.edit');
     Route::post('/update/role/{id}', [RoleController::class, 'update'])->name('role.update');
     Route::post('/delete/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+
+    Route::post('/assign/permission/role/{id}', [RoleController::class, 'give_permission'])->name('role.permission.assign');
+    Route::post('/revoke/permission/role/{id}', [RoleController::class, 'revoke_permission'])->name('role.permission.revoke');
     
     // Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
     // Route::get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');

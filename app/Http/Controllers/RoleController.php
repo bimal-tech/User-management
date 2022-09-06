@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
@@ -68,9 +70,9 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find($id);
-
-        return view('role.edit', compact('role'));
+        $role = Role::with('permissions')->find($id);
+        $permissions=Permission::all();
+        return view('role.edit', compact('role','permissions'));
     }
 
     /**
@@ -100,5 +102,21 @@ class RoleController extends Controller
         $role = Role::find($id);
         $role->delete();
         return redirect(route('role.index'));
+    }
+    public function give_permission(Request $request, $id)
+    {
+        $role = Role::find($id);
+        $permissions=$request->assignPermission;
+        $role->givePermissionTo($permissions);
+        return redirect(route('role.edit',$id));
+    }
+    public function revoke_permission(Request $request,$id)
+    {
+        $role = Role::find($id);
+        $permissions=$request->revoke_permission;
+        foreach ($permissions as $permission) {
+            $role->revokePermissionTo($permission);
+        }
+        return redirect(route('role.edit',$id));
     }
 }
