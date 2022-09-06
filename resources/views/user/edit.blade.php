@@ -1,3 +1,33 @@
+@section('styles')
+    <style>
+        .check {
+            -webkit-appearance: none;
+            /*hides the default checkbox*/
+            height: 25px;
+            width: 25px;
+            transition: 0.10s;
+            text-align: center;
+            font-weight: 400;
+            color: rgb(255, 255, 255);
+            /* border-radius: 3px; */
+            outline: none;
+        }
+
+        .check:before {
+            content: "✔";
+
+        }
+
+        .check:checked:before {
+            content: "✖";
+        }
+
+        .check:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+    </style>
+@endsection
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -69,11 +99,18 @@
                         <?php $user_permissions = $user->permissions;
                         $i = 1;
                         ?>
-                        <ul>
+                        <form method="POST" action="{{ route('permission.revoke', $user->id) }}">
+                            @csrf
                             @foreach ($user_permissions as $user_permission)
-                                <li>{{ $i++ }}. {{ $user_permission->name }} </li>
+                                <div class="input-group mb-3">
+                                    <input class="form-check-input mx-4 check" type="checkbox"
+                                        value={{ $user_permission->id }} name="revoke_permission[]"
+                                        id=<?php echo 'user_permission-' . $user_permission->id; ?>>
+                                    <label for=<?php echo 'user_permission-' . $user_permission->id; ?>>{{ $user_permission->name }} </label>
+                                </div>
                             @endforeach
-                        </ul>
+                            <button type="submit" class="btn btn-secondary mt-3 mb-3">Update</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -99,7 +136,7 @@
                                         name="assignPermission[]" id=<?php echo 'permission-' . $permission->id; ?>>
                                     <label for=<?php echo 'permission-' . $permission->id; ?>>{{ $permission->name }} </label>
                                 </div>
-                            @endforeach     
+                            @endforeach
                             <button type="submit" class="btn btn-secondary mt-3 mb-3">Update</button>
                         </form>
                     </div>

@@ -38,13 +38,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/update/role/{id}', [RoleController::class, 'update'])->name('role.update');
     Route::post('/delete/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
     
-    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
-    Route::get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
-    Route::post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');
-    Route::get('/edit/permission/{id}', [PermissionController::class, 'edit'])->name('permission.edit');
-    Route::post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
-    Route::post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
-    Route::post('/assign/permission/{id}',[PermissionController::class,'give_permission'])->name('permission.assign');
+    // Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
+    // Route::get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
+    // Route::post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');
+    // Route::get('/edit/permission/{id}', [PermissionController::class, 'edit'])->name('permission.edit');
+    // Route::post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
+    // Route::post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+    // Route::post('/assign/permission/{id}',[PermissionController::class,'give_permission'])->name('permission.assign');
 });
 
 
