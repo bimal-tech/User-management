@@ -103,7 +103,7 @@
                             @csrf
                             @foreach ($user_permissions as $user_permission)
                                 <div class="input-group mb-3">
-                                    <input class="form-check-input mx-4 check" type="checkbox"
+                                    <input class=" mx-4 check" type="checkbox"
                                         value={{ $user_permission->id }} name="revoke_permission[]"
                                         id=<?php echo 'user_permission-' . $user_permission->id; ?>>
                                     <label for=<?php echo 'user_permission-' . $user_permission->id; ?>>{{ $user_permission->name }} </label>

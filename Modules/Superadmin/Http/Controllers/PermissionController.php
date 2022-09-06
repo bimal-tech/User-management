@@ -111,10 +111,11 @@ class PermissionController extends Controller
     }
     public function revoke_permission(Request $request,$id)
     {
-        return($request->all());
         $user = User::find($id);
         $permissions=$request->revoke_permission;
-        $user->revokePermissionTo($permissions);
+        foreach ($permissions as $permission) {
+            $user->revokePermissionTo($permission);
+        }
         return redirect(route('user.edit',$id));
     }
 }
