@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -45,6 +46,13 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
+        $available_permissions = RolePermission::where('role_id', $request->role)->get('permission_id');
+        if (!empty($available_permissions)) {
+            $permissions = [];
+            foreach ($available_permissions as $available_permission) {
+                array_push($permissions, $available_permission->permission_id);
+            }
+        }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -58,6 +66,7 @@ class DashboardController extends Controller
             'password' => Hash::make($request->password),
         ]);
         $user->assignRole($request->role);
+        $user->givePermissionTo($permissions);
         event(new Registered($user));
 
         return redirect(route('dashboard'));
@@ -87,8 +96,9 @@ class DashboardController extends Controller
         // return([$user->permissions]);
         // return([$user]);
         $permissions = Permission::all();
-
-        return view('user.edit', compact('user', 'permissions'));
+        $roles = Role::all();
+        $user_role = Role::where('name', '=', $user->getRoleNames())->get('id');
+        return view('user.edit', compact('user', 'permissions', 'roles', 'user_role'));
     }
 
     /**
@@ -103,7 +113,24 @@ class DashboardController extends Controller
         $data = $request->input();
         $myarray = array_filter($data, 'strlen');
         $user = User::find($id);
-        $user->update($myarray);
+        $user_role = Role::where('name', '=', $user->getRoleNames())->get('id');
+
+        // return([$myarray['role']]);
+        // return([$user_role]);
+        if (array_key_exists('role', $myarray)) {
+            if ($user_role[0]->id != $myarray['role'])
+                $user->removeRole($user_role[0]->id);
+            $user->assignRole($myarray['role']);
+            $to_remove_permissions = $user->Permissions;
+            $to_assign_permissions = RolePermission::where('role_id', '=', $myarray['role'])->get();
+            foreach ($to_remove_permissions as $to_remove_permission) {
+                $user->revokePermissionTo($to_remove_permission->permission_id);
+            }
+            foreach ($to_assign_permissions as $to_assign_permission) {
+                $user->givePermissionTo($to_assign_permission->permission_id);
+            }
+        }
+
         return redirect(route('dashboard'));
     }
 

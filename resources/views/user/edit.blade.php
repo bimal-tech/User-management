@@ -59,6 +59,23 @@
                             <x-input id="email" class="block mt-1 w-full" type="email" name="email"
                                 :value="$user->email" required />
                         </div>
+                        {{-- Role --}}
+                        <div class="mt-4">
+                            <x-label for="role" :value="__('Role')" />
+
+                            <select class="form-select" name="role">
+                                @foreach ($roles as $role)
+                                    <option value={{ $role->id }} <?php $current_user_role = $user_role[0]->id;
+                                    if ($role->id === $current_user_role) {
+                                        echo 'selected';
+                                    }
+                                    ?>>{{ $role->name }}
+
+                                    </option>
+                                @endforeach
+                            </select>
+
+                        </div>
 
                         <!-- Password -->
                         <div class="mt-4">
@@ -103,9 +120,8 @@
                             @csrf
                             @foreach ($user_permissions as $user_permission)
                                 <div class="input-group mb-3">
-                                    <input class=" mx-4 check" type="checkbox"
-                                        value={{ $user_permission->id }} name="revoke_permission[]"
-                                        id=<?php echo 'user_permission-' . $user_permission->id; ?>>
+                                    <input class=" mx-4 check" type="checkbox" value={{ $user_permission->id }}
+                                        name="revoke_permission[]" id=<?php echo 'user_permission-' . $user_permission->id; ?>>
                                     <label for=<?php echo 'user_permission-' . $user_permission->id; ?>>{{ $user_permission->name }} </label>
                                 </div>
                             @endforeach

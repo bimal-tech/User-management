@@ -74,7 +74,7 @@
                         </h3>
 
 
-                        <?php $role_permissions = $role->permissions;
+                        <?php $role_permissions = $user_permissions;
                         $i = 1;
                         ?>
                         @if (!empty($role_permissions))
@@ -83,9 +83,9 @@
                                 @csrf
                                 @foreach ($role_permissions as $role_permission)
                                     <div class="input-group mb-3">
-                                        <input class="mx-4 check" type="checkbox" value={{ $role_permission->id }}
-                                            name="revoke_permission[]" id=<?php echo 'role_permission-' . $role_permission->id; ?>>
-                                        <label for=<?php echo 'role_permission-' . $role_permission->id; ?>>{{ $role_permission->name }} </label>
+                                        <input class="mx-4 check" type="checkbox" value={{ $role_permission->permission_id }}
+                                            name="revoke_permission[]" id=<?php echo 'role_permission-' . $role_permission->permission_id; ?>>
+                                        <label for=<?php echo 'role_permission-' . $role_permission->permission_id; ?>>{{ $role_permission->permissions }} </label>
                                     </div>
                                 @endforeach
                                 <button type="submit" class="btn btn-secondary mt-3 mb-3">Update</button>
