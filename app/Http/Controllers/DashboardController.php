@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -18,12 +19,12 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $users=User::all();
+        $users = User::all();
         // $role=$users[0]->roles;
         // return([$role[0]->name]);
-        return view('dashboard',compact('users'));
+        return view('dashboard', compact('users'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,7 +33,8 @@ class DashboardController extends Controller
      */
     public function create()
     {
-        return view('user.index');
+        $roles = Role::all();
+        return view('user.index', compact('roles'));
     }
 
     /**
@@ -47,6 +49,7 @@ class DashboardController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'max:255'],
         ]);
 
         $user = User::create([
@@ -54,10 +57,10 @@ class DashboardController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        $user->assignRole($request->role);
         event(new Registered($user));
 
-return redirect(route('dashboard'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -68,8 +71,8 @@ return redirect(route('dashboard'));
      */
     public function show($id)
     {
-        $user=User::find($id);
-        return view('user.show',compact('user'));
+        $user = User::find($id);
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -80,13 +83,12 @@ return redirect(route('dashboard'));
      */
     public function edit($id)
     {
-        $user=User::with('permissions')->find($id);
+        $user = User::with('permissions')->find($id);
         // return([$user->permissions]);
         // return([$user]);
-        $permissions=Permission::all();
-   
-        return view('user.edit',compact('user','permissions'));
-        
+        $permissions = Permission::all();
+
+        return view('user.edit', compact('user', 'permissions'));
     }
 
     /**
@@ -98,9 +100,9 @@ return redirect(route('dashboard'));
      */
     public function update(Request $request, $id)
     {
-        $data=$request->input();
+        $data = $request->input();
         $myarray = array_filter($data, 'strlen');
-        $user=User::find($id);
+        $user = User::find($id);
         $user->update($myarray);
         return redirect(route('dashboard'));
     }
@@ -113,7 +115,7 @@ return redirect(route('dashboard'));
      */
     public function destroy($id)
     {
-        $user=User::find($id);
+        $user = User::find($id);
         $user->delete();
         return redirect(route('dashboard'));
     }

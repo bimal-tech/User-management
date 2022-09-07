@@ -30,6 +30,19 @@
                                 :value="old('email')" required />
                         </div>
 
+                        {{-- Role --}}
+                        <div class="mt-4">
+                            <x-label for="role" :value="__('Role')" />
+
+                                <select class="form-select" name="role">
+                                  <option selected>-- Select role --</option>
+                                  @foreach ($roles as $role)
+                                  <option value={{$role->id}}>{{$role->name}}</option>
+                                  @endforeach
+                                </select>
+                              
+                        </div>
+
                         <!-- Password -->
                         <div class="mt-4">
                             <x-label for="password" :value="__('Password')" />
