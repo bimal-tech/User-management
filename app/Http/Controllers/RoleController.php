@@ -72,11 +72,11 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $user_permissions=DB::select('select permission_id,role_id, roles.name as name,permissions.name as permissions from role_has_permissions as rp join roles on rp.role_id=roles.id join permissions on rp.permission_id=permissions.id where role_id=?',[$id]);
+        $user_permissions = DB::select('select permission_id,role_id, roles.name as name,permissions.name as permissions from role_has_permissions as rp join roles on rp.role_id=roles.id join permissions on rp.permission_id=permissions.id where role_id=?', [$id]);
         $role = Role::find($id);
         // return ([$role]);
         $permissions = Permission::all();
-        return view('role.edit', compact('role', 'permissions','user_permissions'));
+        return view('role.edit', compact('role', 'permissions', 'user_permissions'));
     }
 
     /**
@@ -109,6 +109,9 @@ class RoleController extends Controller
     }
     public function give_permission(Request $request, $id)
     {
+        if (!array_key_exists('assignPermission', $request->all())) {
+            return redirect(route('role.edit', $id));
+        }
         $role = Role::find($id);
         $permissions = $request->assignPermission;
         foreach ($permissions as $permission) {
@@ -117,11 +120,21 @@ class RoleController extends Controller
                 'role_id' => $role->id,
             ]);
         }
+        $users_with_role = DB::table('model_has_roles')->where('role_id', '=', $id)->where('model_type', '=', 'App\Models\User')->get('model_id');
+        if (!empty($users_with_role)) {
+            foreach ($users_with_role as $user) {
+                $user_db = User::find($user->model_id);
+                $user_db->givePermissionTo($permissions);
+            }
+        }
         // $role->givePermissionTo($permissions);
         return redirect(route('role.edit', $id));
     }
     public function revoke_permission(Request $request, $id)
     {
+        if (!array_key_exists('revoke_permission', $request->all())) {
+            return redirect(route('role.edit', $id));
+        }
         $role = Role::find($id);
         $permissions = $request->revoke_permission;
         foreach ($permissions as $permission) {
@@ -129,6 +142,15 @@ class RoleController extends Controller
                 ->where('permission_id', $permission)
                 ->where('role_id', $role->id)
                 ->delete();
+        }
+        $users_with_role = DB::table('model_has_roles')->where('role_id', '=', $id)->where('model_type', '=', 'App\Models\User')->get('model_id');
+        if (!empty($users_with_role)) {
+            foreach ($users_with_role as $user) {
+                $user_db = User::find($user->model_id);
+                foreach ($permissions as $permission) {
+                    $user_db->revokePermissionTo($permission);
+                }
+            }
         }
         return redirect(route('role.edit', $id));
     }

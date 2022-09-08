@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,22 +20,32 @@ class RoleSeeder extends Seeder
         DB::table('roles')->insert([
             'name' => 'superadmin',
             'guard_name' => 'web',
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now()
         ]);
         DB::table('roles')->insert([
             'name' => 'admin',
             'guard_name' => 'web',
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now()
         ]);
         DB::table('roles')->insert([
             'name' => 'distributor',
             'guard_name' => 'web',
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now()
         ]);
         DB::table('roles')->insert([
             'name' => 'creator',
             'guard_name' => 'web',
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now()
         ]);
         DB::table('roles')->insert([
             'name' => 'editor',
             'guard_name' => 'web',
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now()
         ]);
 
         $user1=User::find(1);
