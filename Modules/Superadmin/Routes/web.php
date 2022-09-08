@@ -17,7 +17,7 @@ Route::prefix('superadmin')->group(function () {
     Route::get('/', 'SuperadminController@index');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('superadmin')->group(function () {
     Route::middleware(['can:see permission list'])->get('/permission', [PermissionController::class, 'index'])->name('permission.index');
     Route::middleware(['can:create permission'])->get('/create/permission', [PermissionController::class, 'create'])->name('permission.create');
     Route::middleware(['can:create permission'])->post('/create/permission', [PermissionController::class, 'store'])->name('permission.store');

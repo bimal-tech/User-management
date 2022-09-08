@@ -24,8 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/user/{id}', [DashboardController::class, 'show'])->name('user.show');
 
-    Route::middleware(['can:create user'])->get('/create/user', [DashboardController::class, 'create'])->name('user.create');
-    Route::middleware(['can:create user'])->post('/create/user', [DashboardController::class, 'store'])->name('user.store');
+    // Route::middleware(['can:make users'])->get('/create/user', [DashboardController::class, 'create'])->name('user.create');
+    // Route::middleware(['can:make users'])->post('/create/user', [DashboardController::class, 'store'])->name('user.store');
     
     Route::get('/edit/user/{id}', [DashboardController::class, 'edit'])->name('user.edit');
     Route::post('/update/user/{id}', [DashboardController::class, 'update'])->name('user.update');
@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
     // Route::post('/update/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
     // Route::post('/delete/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
     // Route::post('/assign/permission/{id}',[PermissionController::class,'give_permission'])->name('permission.assign');
+
+    
 });
 
 
