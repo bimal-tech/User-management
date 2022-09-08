@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
