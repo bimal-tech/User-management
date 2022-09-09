@@ -3,7 +3,6 @@
 namespace Modules\Account\Http\Controllers;
 
 use App\Models\Permission;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
