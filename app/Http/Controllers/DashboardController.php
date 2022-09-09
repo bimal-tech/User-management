@@ -95,10 +95,12 @@ class DashboardController extends Controller
         $user = User::with('permissions')->find($id);
         // return([$user->permissions]);
         // return([$user]);
+        $permission_names=Permission::all('module_name')->unique('module_name');
+        // return([$permission_names]);
         $permissions = Permission::all();
         $roles = Role::all();
         $user_role = Role::where('name', '=', $user->getRoleNames())->get('id');
-        return view('user.edit', compact('user', 'permissions', 'roles', 'user_role'));
+        return view('user.edit', compact('user', 'permissions', 'roles', 'user_role','permission_names'));
     }
 
     /**

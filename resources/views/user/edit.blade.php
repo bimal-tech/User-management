@@ -141,17 +141,29 @@
                     </h2>
                     <div class="card ps-3 pt-3 text-underline">
 
-                        <h3 class="font-semibold text-xl  leading-tight text-info-900">
-                            Assign User Permission
-                        </h3>
+
                         <form method="POST" action="{{ route('permission.assign', $user->id) }}">
                             @csrf
-                            @foreach ($permissions as $permission)
-                                <div class="input-group mb-3">
-                                    <input class="form-check-input mx-4" type="checkbox" value={{ $permission->id }}
-                                        name="assignPermission[]" id=<?php echo 'permission-' . $permission->id; ?>>
-                                    <label for=<?php echo 'permission-' . $permission->id; ?>>{{ $permission->name }} </label>
+                            @foreach ($permission_names as $permission_name)
+                                <div class="input-group
+                                        mb-3">
+                                    <label class="font-semibold text-xl leading-tight text-info-900">
+                                        {{ $permission_name->module_name }}
+                                    </label>
+                                    <input class="form-check-input mx-2" type="checkbox" id=<?php echo 'checkall-' . $permission_name->module_name; ?>
+                                        onclick="btnclicked('{{ $permission_name->module_name }}')">
                                 </div>
+                                @foreach ($permissions as $permission)
+                                    @if ($permission->module_name == $permission_name->module_name)
+                                        <div class="input-group
+                                        mb-3">
+                                            <input class="form-check-input mx-4" type="checkbox"
+                                                value={{ $permission->id }} name="assignPermission[]"
+                                                id=<?php echo 'permission-' . $permission->module_name . '-' . $permission->id; ?>>
+                                            <label for=<?php echo 'permission-' . $permission->id; ?>>{{ $permission->name }} </label>
+                                        </div>
+                                    @endif
+                                @endforeach
                             @endforeach
                             <button type="submit" class="btn btn-secondary mt-3 mb-3">Update</button>
                         </form>
